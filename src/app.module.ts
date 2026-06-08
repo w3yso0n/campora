@@ -20,7 +20,7 @@ import { Foto } from './registros/entities/foto.entity.js';
         port: config.get<number>('DB_PORT', 3306),
         username: config.get<string>('DB_USER', 'root'),
         password: config.get<string>('DB_PASSWORD', ''),
-        database: config.get<string>('DB_NAME', 'carga_offline'),
+        database: config.get<string>('DB_NAME', 'campora'),
         entities: [Registro, Foto],
         synchronize: true, // solo para desarrollo; usar migraciones en producción
       }),
