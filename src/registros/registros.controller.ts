@@ -39,6 +39,19 @@ export class RegistrosController {
     return this.registrosService.findOne(id);
   }
 
+  @Get(':id/fotos')
+  findFotos(@Param('id', ParseIntPipe) id: number) {
+    return this.registrosService.findFotos(id);
+  }
+
+  @Get(':registroId/fotos/:fotoId')
+  findFoto(
+    @Param('registroId', ParseIntPipe) registroId: number,
+    @Param('fotoId', ParseIntPipe) fotoId: number,
+  ) {
+    return this.registrosService.findFoto(registroId, fotoId);
+  }
+
   @Post(':id/fotos')
   @HttpCode(HttpStatus.CREATED)
   addFoto(

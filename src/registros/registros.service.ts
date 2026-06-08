@@ -59,6 +59,35 @@ export class RegistrosService {
     return { ...registro, fotos: fotosConUrl };
   }
 
+  private fotoConUrl(foto: Foto): Foto & { url: string } {
+    return {
+      ...foto,
+      url: this.storage.getPublicUrl(`registros/${foto.registroId}/${foto.nombreArchivo}`),
+    };
+  }
+
+  async findFotos(registroId: number): Promise<(Foto & { url: string })[]> {
+    const registro = await this.registroRepo.findOne({ where: { id: registroId } });
+    if (!registro) {
+      throw new NotFoundException(`Registro ${registroId} no encontrado`);
+    }
+
+    const fotos = await this.fotoRepo.find({
+      where: { registroId },
+      order: { createdAt: 'ASC' },
+    });
+
+    return fotos.map((f) => this.fotoConUrl(f));
+  }
+
+  async findFoto(registroId: number, fotoId: number): Promise<Foto & { url: string }> {
+    const foto = await this.fotoRepo.findOne({ where: { id: fotoId, registroId } });
+    if (!foto) {
+      throw new NotFoundException(`Foto ${fotoId} no encontrada en el registro ${registroId}`);
+    }
+    return this.fotoConUrl(foto);
+  }
+
   async addFoto(registroId: number, dto: CreateFotoDto): Promise<Foto> {
     const registro = await this.registroRepo.findOne({ where: { id: registroId } });
     if (!registro) {
